@@ -78,7 +78,12 @@ class AssignableList(list):
     def get_new_attrs(self):
         return self._new_attrs.copy()
 
-class AttrRouter(object):
+
+class ABCMetaMetaClass(type):
+    pass
+ABCMeta = ABCMetaMetaClass('ABCMeta', (object, ), {})
+
+class AttrRouter(ABCMeta):
     """
     Black magic ;). This abstract class exists to prevent one of my least
     favorite code repetition scenarios, namely
@@ -144,7 +149,6 @@ class AttrRouter(object):
     #TODO allow specifying a base object and then a string attribute to support
     #the case where routing to self.member, where member changes frequently- 
     #eg self._route(['method1'], self, member_chain = ['member'])
-    __metaclass__ = ABCMeta
     __router_dict_key = '_AttrRouter__attr_route_dict'
     def __init__(self, *args, **kwargs):
         super(AttrRouter, self).__init__(*args, **kwargs)

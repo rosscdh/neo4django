@@ -30,12 +30,14 @@ MAX_INT = 9223372036854775807
 
 FIELD_PASSTHROUGH_METHODS = ('formfield',)
 
+class ABCMetaClass(type):
+    pass
+ABCMeta = ABCMetaClass('ABCMeta', (object, ), {})
+
 @borrows_methods(fields.Field, FIELD_PASSTHROUGH_METHODS)
-class Property(object):
+class Property(ABCMeta):
     """Extend to create properties of specific types."""
     # This class borrows heavily from Django 1.3's django.db.models.field.Field
-
-    __metaclass__ = ABCMeta
 
     default_validators = [] # Default set of validators
     default_error_messages = {
@@ -663,8 +665,11 @@ class DateTimeProperty(DateProperty):
             return super(DateProperty, self).pre_save(model_instance, add,
                                                       attname)
 
-class ArrayProperty(Property):
-    __metaclass__ = ABCMeta
+class PropertyMetaClass(type):
+    pass
+PropertyMeta = PropertyMetaClass('Property', (object, ), {})
+
+class ArrayProperty(PropertyMeta):
 
     default_validators = [validate_array]
 

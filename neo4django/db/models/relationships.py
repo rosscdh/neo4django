@@ -89,9 +89,13 @@ class RelationshipModel(object):
     def add_field(self, prop):
         raise NotImplementedError("<RelationshipModel>.add_field()")
 
-class Relationship(object):
+
+class RelationshipBaseMetaClass(type):
+    pass
+RelationshipBase = RelationshipBaseMetaClass('RelationshipBase', (object, ), {})
+
+class Relationship(RelationshipBase):
     """Extend to add properties to relationships."""
-    __metaclass__ = RelationshipBase
 
     def __init__(self, target, rel_type=None, direction=None, optional=True,
                  single=False, related_single=False, related_name=None,
